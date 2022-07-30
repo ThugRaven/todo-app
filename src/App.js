@@ -12,9 +12,11 @@ import {
 export default function App() {
 	const [todoLists, setTodoLists] = useState([]);
 	const [selectedListId, setSelectedListId] = useState(-1);
-	const [isInEditMode, setIsInEditMode] = useState(false);
-	const [editTodoId, setEditTodoId] = useState(-1);
-	const [editTodoText, setEditTodoText] = useState('');
+	const [editMode, setEditMode] = useState({
+		isEnabled: false,
+		id: -1,
+		text: '',
+	});
 
 	useEffect(() => {
 		const storageTodos = JSON.parse(
@@ -65,9 +67,7 @@ export default function App() {
 	}
 
 	function resetEditMode() {
-		setIsInEditMode(false);
-		setEditTodoId(-1);
-		setEditTodoText('');
+		setEditMode({ isEnabled: false, id: -1, text: '' });
 	}
 
 	function handleAddNewTodo(newTodoName) {
@@ -120,9 +120,7 @@ export default function App() {
 	}
 
 	function handleTodoEditMode(id, text) {
-		setIsInEditMode(true);
-		setEditTodoId(id);
-		setEditTodoText(text);
+		setEditMode({ isEnabled: true, id, text });
 	}
 
 	function handleTodoEditSave(text) {
@@ -136,7 +134,7 @@ export default function App() {
 					return {
 						...list,
 						todos: list.todos.map((todo) => {
-							if (todo.id === editTodoId) {
+							if (todo.id === editMode.id) {
 								return {
 									...todo,
 									text: text.trim(),
@@ -200,9 +198,7 @@ export default function App() {
 					onAddNewTodo={handleAddNewTodo}
 					onTodoChange={handleTodoChange}
 					onTodoRemove={handleTodoRemove}
-					isInEditMode={isInEditMode}
-					editTodoId={editTodoId}
-					editTodoText={editTodoText}
+					editMode={editMode}
 					onTodoEditMode={handleTodoEditMode}
 					onTodoEditSave={handleTodoEditSave}
 					onTodoEditCancel={handleTodoEditCancel}

@@ -64,7 +64,7 @@ export default function Todos(props) {
 						</svg>
 					</div>
 				</div>
-				{!props.isInEditMode ? (
+				{!props.editMode.isEnabled ? (
 					<TodoForm
 						placeholder="Add a task"
 						maxLength="200"
@@ -74,8 +74,8 @@ export default function Todos(props) {
 					<TodoEditForm
 						placeholder="New todo text"
 						maxLength="200"
-						key={props.editTodoId}
-						value={props.editTodoText}
+						key={props.editMode.id}
+						value={props.editMode.text}
 						onSubmit={props.onTodoEditSave}
 						onTodoEditCancel={props.onTodoEditCancel}
 					/>
