@@ -1,45 +1,41 @@
-import './App.css';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import Todos from './components/Todos';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import './App.css';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import Todos from './components/Todos';
 import {
 	LOCAL_STORAGE_KEY_SELECTED_LIST,
 	LOCAL_STORAGE_KEY_TODOS,
 } from './constants';
 
-export default class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			todoLists: [],
-			selectedListId: -1,
-			isInEditMode: false,
-			editTodoId: -1,
-			editTodoText: '',
-		};
-	}
+export default function App() {
+	const [todoLists, setTodoLists] = useState([]);
+	const [selectedListId, setSelectedListId] = useState(-1);
+	const [isInEditMode, setIsInEditMode] = useState(false);
+	const [editTodoId, setEditTodoId] = useState(-1);
+	const [editTodoText, setEditTodoText] = useState('');
 
-	componentDidMount() {
+	useEffect(() => {
 		const storageTodos = JSON.parse(
 			localStorage.getItem(LOCAL_STORAGE_KEY_TODOS),
 		);
 		if (storageTodos) {
-			this.setState({
-				todoLists: storageTodos,
-			});
+			setTodoLists(storageTodos);
 		}
 
 		const storageSelectedList = localStorage.getItem(
 			LOCAL_STORAGE_KEY_SELECTED_LIST,
 		);
-		this.setState({
-			selectedListId: storageSelectedList ? storageSelectedList : -1,
-		});
-	}
+		setSelectedListId(storageSelectedList ? storageSelectedList : -1);
+	}, []);
 
-	handleAddNewList = (newListName) => {
+	useEffect(() => {
+		localStorage.setItem(LOCAL_STORAGE_KEY_TODOS, JSON.stringify(todoLists));
+		localStorage.setItem(LOCAL_STORAGE_KEY_SELECTED_LIST, selectedListId);
+	}, [todoLists, selectedListId]);
+
+	function handleAddNewList(newListName) {
 		if (newListName.length === 0) {
 			return;
 		}
@@ -49,32 +45,32 @@ export default class App extends React.Component {
 			name: newListName,
 			todos: [],
 		};
-		this.setState((state) => ({
-			todoLists: [...state.todoLists, newTodoList],
-			selectedListId: newTodoList.id,
-		}));
-	};
 
-	handleRemoveList = (id) => {
+		setTodoLists((prevState) => [...prevState, newTodoList]);
+		setSelectedListId(newTodoList.id);
+	}
+
+	function handleRemoveList(id) {
 		if (window.confirm('Are you sure you want to delete this list?')) {
-			let filteredList = this.state.todoLists.filter((list) => list.id !== id);
-			this.setState({
-				todoLists: filteredList,
-				selectedListId: filteredList.length > 0 ? filteredList[0].id : -1,
-			});
+			let filteredList = todoLists.filter((list) => list.id !== id);
+
+			setTodoLists(filteredList);
+			setSelectedListId(filteredList.length > 0 ? filteredList[0].id : -1);
 		}
-	};
+	}
 
-	handleListClick = (id) => {
-		this.setState({
-			selectedListId: id,
-			isInEditMode: false,
-			editTodoId: -1,
-			editTodoText: '',
-		});
-	};
+	function handleListClick(id) {
+		setSelectedListId(id);
+		resetEditMode();
+	}
 
-	handleAddNewTodo = (newTodoName) => {
+	function resetEditMode() {
+		setIsInEditMode(false);
+		setEditTodoId(-1);
+		setEditTodoText('');
+	}
+
+	function handleAddNewTodo(newTodoName) {
 		if (newTodoName.length === 0) {
 			return;
 		}
@@ -85,9 +81,9 @@ export default class App extends React.Component {
 			complete: false,
 		};
 
-		this.setState((state) => ({
-			todoLists: state.todoLists.map((list) => {
-				if (list.id === state.selectedListId) {
+		setTodoLists((prevState) =>
+			prevState.map((list) => {
+				if (list.id === selectedListId) {
 					return {
 						...list,
 						todos: [...list.todos, newTodo],
@@ -96,13 +92,13 @@ export default class App extends React.Component {
 					return list;
 				}
 			}),
-		}));
-	};
+		);
+	}
 
-	handleTodoChange = (id) => {
-		this.setState((state) => ({
-			todoLists: state.todoLists.map((list) => {
-				if (list.id === state.selectedListId) {
+	function handleTodoChange(id) {
+		setTodoLists((prevState) =>
+			prevState.map((list) => {
+				if (list.id === selectedListId) {
 					return {
 						...list,
 						todos: list.todos.map((todo) => {
@@ -120,29 +116,27 @@ export default class App extends React.Component {
 					return list;
 				}
 			}),
-		}));
-	};
+		);
+	}
 
-	handleTodoEditMode = (id, text) => {
-		this.setState({
-			isInEditMode: true,
-			editTodoId: id,
-			editTodoText: text,
-		});
-	};
+	function handleTodoEditMode(id, text) {
+		setIsInEditMode(true);
+		setEditTodoId(id);
+		setEditTodoText(text);
+	}
 
-	handleTodoEditSave = (text) => {
+	function handleTodoEditSave(text) {
 		if (text.length === 0) {
 			return;
 		}
 
-		this.setState((state) => ({
-			todoLists: state.todoLists.map((list) => {
-				if (list.id === state.selectedListId) {
+		setTodoLists((prevState) =>
+			prevState.map((list) => {
+				if (list.id === selectedListId) {
 					return {
 						...list,
 						todos: list.todos.map((todo) => {
-							if (todo.id === state.editTodoId) {
+							if (todo.id === editTodoId) {
 								return {
 									...todo,
 									text: text.trim(),
@@ -156,24 +150,18 @@ export default class App extends React.Component {
 					return list;
 				}
 			}),
-			isInEditMode: false,
-			editTodoId: -1,
-			editTodoText: '',
-		}));
-	};
+		);
+		resetEditMode();
+	}
 
-	handleTodoEditCancel = () => {
-		this.setState({
-			isInEditMode: false,
-			editTodoId: -1,
-			editTodoText: '',
-		});
-	};
+	function handleTodoEditCancel() {
+		resetEditMode();
+	}
 
-	handleTodoRemove = (id) => {
-		this.setState((state) => ({
-			todoLists: state.todoLists.map((list) => {
-				if (list.id === state.selectedListId) {
+	function handleTodoRemove(id) {
+		setTodoLists((prevState) =>
+			prevState.map((list) => {
+				if (list.id === selectedListId) {
 					return {
 						...list,
 						todos: list.todos.filter((todo) => todo.id !== id),
@@ -182,63 +170,46 @@ export default class App extends React.Component {
 					return list;
 				}
 			}),
-		}));
-	};
-
-	componentDidUpdate() {
-		localStorage.setItem(
-			LOCAL_STORAGE_KEY_TODOS,
-			JSON.stringify(this.state.todoLists),
-		);
-		localStorage.setItem(
-			LOCAL_STORAGE_KEY_SELECTED_LIST,
-			this.state.selectedListId,
 		);
 	}
 
-	addTestData = () => {
-		this.setState((state) => ({
-			todoLists: [...state.todoLists, ...getTestData()],
-		}));
-	};
+	function addTestData() {
+		setTodoLists((prevState) => [...prevState, ...getTestData()]);
+	}
 
-	render() {
-		let selectedList;
-		if (this.state.selectedListId === -1) {
-			selectedList = this.state.todoLists[0];
-		} else {
-			selectedList = this.state.todoLists.find(
-				(list) => list.id === this.state.selectedListId,
-			);
-		}
+	let selectedList;
+	if (selectedListId === -1) {
+		selectedList = todoLists[0];
+	} else {
+		selectedList = todoLists.find((list) => list.id === selectedListId);
+	}
 
-		return (
-			<>
-				<Sidebar
-					todoLists={this.state.todoLists}
-					selectedListId={this.state.selectedListId}
-					onAddNewList={this.handleAddNewList}
-					onListClick={this.handleListClick}
+	return (
+		<>
+			<Sidebar
+				todoLists={todoLists}
+				selectedListId={selectedListId}
+				onAddNewList={handleAddNewList}
+				onListClick={handleListClick}
+			/>
+			<div className="content__container">
+				<Header onAddTestData={addTestData} />
+				<Todos
+					todoList={selectedList}
+					onRemoveList={handleRemoveList}
+					onAddNewTodo={handleAddNewTodo}
+					onTodoChange={handleTodoChange}
+					onTodoRemove={handleTodoRemove}
+					isInEditMode={isInEditMode}
+					editTodoId={editTodoId}
+					editTodoText={editTodoText}
+					onTodoEditMode={handleTodoEditMode}
+					onTodoEditSave={handleTodoEditSave}
+					onTodoEditCancel={handleTodoEditCancel}
 				/>
-				<div className="content__container">
-					<Header onAddTestData={this.addTestData} />
-					<Todos
-						todoList={selectedList}
-						onRemoveList={this.handleRemoveList}
-						onAddNewTodo={this.handleAddNewTodo}
-						onTodoChange={this.handleTodoChange}
-						onTodoRemove={this.handleTodoRemove}
-						isInEditMode={this.state.isInEditMode}
-						editTodoId={this.state.editTodoId}
-						editTodoText={this.state.editTodoText}
-						onTodoEditMode={this.handleTodoEditMode}
-						onTodoEditSave={this.handleTodoEditSave}
-						onTodoEditCancel={this.handleTodoEditCancel}
-					/>
-				</div>
-			</>
-		);
-	}
+			</div>
+		</>
+	);
 }
 
 function getTestData() {
