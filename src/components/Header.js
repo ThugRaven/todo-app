@@ -6,7 +6,7 @@ export default function Header(props) {
 	}
 
 	return (
-		<header id="todo-list">
+		<header>
 			<h1 className="todo__logo" onClick={handleClick}>
 				Todo
 			</h1>
