@@ -1,9 +1,9 @@
 import React from 'react';
 
 export default React.memo(function TodoList(props) {
-	function handleClick() {
+	const handleClick = () => {
 		props.onListClick(props.list.id);
-	}
+	};
 
 	const numOfCompletedTodos = props.list.todos.filter(
 		(todo) => todo.complete === true,

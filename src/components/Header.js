@@ -1,9 +1,9 @@
 import React from 'react';
 
 export default function Header(props) {
-	function handleClick() {
+	const handleClick = () => {
 		props.onAddTestData();
-	}
+	};
 
 	return (
 		<header>

@@ -5,9 +5,9 @@ import TodoEditForm from './TodoEditForm';
 import TodoForm from './TodoForm';
 
 export default function Todos(props) {
-	function handleClick() {
+	const handleClick = () => {
 		props.onRemoveList(props.todoList.id);
-	}
+	};
 
 	let todoList = props.todoList || null;
 

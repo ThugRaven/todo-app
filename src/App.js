@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 import Header from './components/Header';
@@ -38,7 +37,7 @@ export default function App() {
 		localStorage.setItem(LOCAL_STORAGE_KEY_SELECTED_LIST, selectedListId);
 	}, [todoLists, selectedListId]);
 
-	function handleAddNewList(newListName) {
+	const handleAddNewList = (newListName) => {
 		if (newListName.length === 0) {
 			return;
 		}
@@ -51,27 +50,27 @@ export default function App() {
 
 		setTodoLists((state) => [...state, newTodoList]);
 		setSelectedListId(newTodoList.id);
-	}
+	};
 
-	function handleRemoveList(id) {
+	const handleRemoveList = (id) => {
 		if (window.confirm('Are you sure you want to delete this list?')) {
 			let filteredList = todoLists.filter((list) => list.id !== id);
 
 			setTodoLists(filteredList);
 			setSelectedListId(filteredList.length > 0 ? filteredList[0].id : -1);
 		}
-	}
+	};
 
 	const handleListClick = useCallback((id) => {
 		setSelectedListId(id);
 		resetEditMode();
 	}, []);
 
-	function resetEditMode() {
+	const resetEditMode = () => {
 		setEditMode({ isEnabled: false, id: -1, text: '' });
-	}
+	};
 
-	function handleAddNewTodo(newTodoName) {
+	const handleAddNewTodo = (newTodoName) => {
 		if (newTodoName.length === 0) {
 			return;
 		}
@@ -94,7 +93,7 @@ export default function App() {
 				}
 			}),
 		);
-	}
+	};
 
 	const handleTodoChange = useCallback(
 		(id) => {
@@ -127,7 +126,7 @@ export default function App() {
 		setEditMode({ isEnabled: true, id, text });
 	}, []);
 
-	function handleTodoEditSave(text) {
+	const handleTodoEditSave = (text) => {
 		if (text.length === 0) {
 			return;
 		}
@@ -154,11 +153,11 @@ export default function App() {
 			}),
 		);
 		resetEditMode();
-	}
+	};
 
-	function handleTodoEditCancel() {
+	const handleTodoEditCancel = () => {
 		resetEditMode();
-	}
+	};
 
 	const handleTodoRemove = useCallback(
 		(id) => {
@@ -178,9 +177,9 @@ export default function App() {
 		[selectedListId],
 	);
 
-	function addTestData() {
+	const addTestData = () => {
 		setTodoLists((state) => [...state, ...getTestData()]);
-	}
+	};
 
 	let selectedList;
 	if (selectedListId === -1) {

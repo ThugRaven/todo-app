@@ -20,16 +20,16 @@ export default function GoToTopButton(props) {
 		};
 	}, [isVisible, fade]);
 
-	function handleAnimationEnd() {
+	const handleAnimationEnd = () => {
 		if (!fade && isVisible) {
 			setIsVisible(false);
 			setFade(true);
 		}
-	}
+	};
 
-	function handleClick() {
+	const handleClick = () => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
-	}
+	};
 
 	return (
 		<>

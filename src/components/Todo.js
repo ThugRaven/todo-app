@@ -3,23 +3,23 @@ import React, { useState } from 'react';
 export default React.memo(function Todo(props) {
 	const [fade, setFade] = useState(false);
 
-	function handleChange() {
+	const handleChange = () => {
 		props.onTodoChange(props.todo.id);
-	}
+	};
 
-	function handleDelete() {
+	const handleDelete = () => {
 		setFade(true);
-	}
+	};
 
-	function handleAnimationEnd() {
+	const handleAnimationEnd = () => {
 		if (fade) {
 			props.onTodoRemove(props.todo.id);
 		}
-	}
+	};
 
-	function handleTodoEditMode() {
+	const handleTodoEditMode = () => {
 		props.onTodoEditMode(props.todo.id, props.todo.text);
-	}
+	};
 
 	return (
 		<li

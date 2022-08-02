@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 export default function TodoForm(props) {
 	const [value, setValue] = useState('');
 
-	function handleChange(e) {
+	const handleChange = (e) => {
 		setValue(e.target.value);
-	}
+	};
 
-	function handleSubmit(e) {
+	const handleSubmit = (e) => {
 		e.preventDefault();
 		props.onSubmit(value);
 		setValue('');
-	}
+	};
 
 	return (
 		<form
