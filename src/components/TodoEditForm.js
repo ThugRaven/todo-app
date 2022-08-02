@@ -26,6 +26,7 @@ export default function TodoEditForm(props) {
 				maxLength={props.maxLength}
 				value={value}
 				onChange={handleChange}
+				autoFocus
 			/>
 
 			<button className="todo__btn" title="Save">
