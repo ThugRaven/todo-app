@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 import Header from './components/Header';
@@ -61,10 +62,10 @@ export default function App() {
 		}
 	}
 
-	function handleListClick(id) {
+	const handleListClick = useCallback((id) => {
 		setSelectedListId(id);
 		resetEditMode();
-	}
+	}, []);
 
 	function resetEditMode() {
 		setEditMode({ isEnabled: false, id: -1, text: '' });
@@ -95,33 +96,36 @@ export default function App() {
 		);
 	}
 
-	function handleTodoChange(id) {
-		setTodoLists((state) =>
-			state.map((list) => {
-				if (list.id === selectedListId) {
-					return {
-						...list,
-						todos: list.todos.map((todo) => {
-							if (todo.id === id) {
-								return {
-									...todo,
-									complete: !todo.complete,
-								};
-							} else {
-								return todo;
-							}
-						}),
-					};
-				} else {
-					return list;
-				}
-			}),
-		);
-	}
+	const handleTodoChange = useCallback(
+		(id) => {
+			setTodoLists((state) =>
+				state.map((list) => {
+					if (list.id === selectedListId) {
+						return {
+							...list,
+							todos: list.todos.map((todo) => {
+								if (todo.id === id) {
+									return {
+										...todo,
+										complete: !todo.complete,
+									};
+								} else {
+									return todo;
+								}
+							}),
+						};
+					} else {
+						return list;
+					}
+				}),
+			);
+		},
+		[selectedListId],
+	);
 
-	function handleTodoEditMode(id, text) {
+	const handleTodoEditMode = useCallback((id, text) => {
 		setEditMode({ isEnabled: true, id, text });
-	}
+	}, []);
 
 	function handleTodoEditSave(text) {
 		if (text.length === 0) {
@@ -156,20 +160,23 @@ export default function App() {
 		resetEditMode();
 	}
 
-	function handleTodoRemove(id) {
-		setTodoLists((state) =>
-			state.map((list) => {
-				if (list.id === selectedListId) {
-					return {
-						...list,
-						todos: list.todos.filter((todo) => todo.id !== id),
-					};
-				} else {
-					return list;
-				}
-			}),
-		);
-	}
+	const handleTodoRemove = useCallback(
+		(id) => {
+			setTodoLists((state) =>
+				state.map((list) => {
+					if (list.id === selectedListId) {
+						return {
+							...list,
+							todos: list.todos.filter((todo) => todo.id !== id),
+						};
+					} else {
+						return list;
+					}
+				}),
+			);
+		},
+		[selectedListId],
+	);
 
 	function addTestData() {
 		setTodoLists((state) => [...state, ...getTestData()]);

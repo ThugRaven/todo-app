@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function TodoList(props) {
+export default React.memo(function TodoList(props) {
 	function handleClick() {
 		props.onListClick(props.list.id);
 	}
@@ -26,4 +26,4 @@ export default function TodoList(props) {
 			>{`${numOfCompletedTodos}/${props.list.todos.length}`}</span>
 		</li>
 	);
-}
+});

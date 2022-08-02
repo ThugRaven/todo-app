@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function Todo(props) {
+export default React.memo(function Todo(props) {
 	const [fade, setFade] = useState(false);
 
 	function handleChange() {
@@ -102,4 +102,4 @@ export default function Todo(props) {
 			</div>
 		</li>
 	);
-}
+});
