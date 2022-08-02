@@ -48,7 +48,7 @@ export default function App() {
 			todos: [],
 		};
 
-		setTodoLists((prevState) => [...prevState, newTodoList]);
+		setTodoLists((state) => [...state, newTodoList]);
 		setSelectedListId(newTodoList.id);
 	}
 
@@ -81,8 +81,8 @@ export default function App() {
 			complete: false,
 		};
 
-		setTodoLists((prevState) =>
-			prevState.map((list) => {
+		setTodoLists((state) =>
+			state.map((list) => {
 				if (list.id === selectedListId) {
 					return {
 						...list,
@@ -96,8 +96,8 @@ export default function App() {
 	}
 
 	function handleTodoChange(id) {
-		setTodoLists((prevState) =>
-			prevState.map((list) => {
+		setTodoLists((state) =>
+			state.map((list) => {
 				if (list.id === selectedListId) {
 					return {
 						...list,
@@ -128,8 +128,8 @@ export default function App() {
 			return;
 		}
 
-		setTodoLists((prevState) =>
-			prevState.map((list) => {
+		setTodoLists((state) =>
+			state.map((list) => {
 				if (list.id === selectedListId) {
 					return {
 						...list,
@@ -157,8 +157,8 @@ export default function App() {
 	}
 
 	function handleTodoRemove(id) {
-		setTodoLists((prevState) =>
-			prevState.map((list) => {
+		setTodoLists((state) =>
+			state.map((list) => {
 				if (list.id === selectedListId) {
 					return {
 						...list,
@@ -172,7 +172,7 @@ export default function App() {
 	}
 
 	function addTestData() {
-		setTodoLists((prevState) => [...prevState, ...getTestData()]);
+		setTodoLists((state) => [...state, ...getTestData()]);
 	}
 
 	let selectedList;
