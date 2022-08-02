@@ -69,7 +69,7 @@ header {
 
 .todo__logo {
 	margin: 1em auto 0;
-	font-size: 2em;
+	font-size: 3em;
 	letter-spacing: 0.25ch;
 	text-align: center;
 	text-shadow: 2px 2px 0px var(--clr-accent);
@@ -444,19 +444,26 @@ header {
 
 .todo__icon--controls {
 	margin: 0;
-	visibility: hidden;
-	opacity: 0;
 	cursor: pointer;
 	transition: visibility 150ms, opacity 150ms ease;
+}
+
+@media only screen and (min-width: 768px) {
+	.todo__icon--controls {
+		visibility: hidden;
+		opacity: 0;
+	}
 }
 
 .todo__icon--controls > svg {
 	fill: var(--clr-primary-dark);
 }
 
-.todo:hover .todo__icon--controls {
-	visibility: visible;
-	opacity: 1;
+@media only screen and (min-width: 768px) {
+	.todo:hover .todo__icon--controls {
+		visibility: visible;
+		opacity: 1;
+	}
 }
 
 .todo__check {
